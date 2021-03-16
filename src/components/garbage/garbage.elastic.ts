@@ -5,22 +5,22 @@ import { IGarbage } from "./garbage.model";
 export abstract class GarbageElasticService {
 
     static async insertGarbage(garbageData: IGarbage) {
-        return await this.create(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_MAPPING_TYPE, garbageData)
+        return await this.create(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, garbageData)
     }
 
     static async updateGarbage(id: string, updateData: IGarbage) {
-        return await this.update(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_MAPPING_TYPE, id, updateData)
+        return await this.update(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, id, updateData)
     }
 
     static async searchById(id: string) {
         const queryData = {match: {_id: id}}
-        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_MAPPING_TYPE, queryData)
+        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, queryData)
         return searchRes.hits.hits
     }
 
     static async searchAll() {
         const queryData: any = {match_all: {}}
-        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_MAPPING_TYPE, queryData)
+        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, queryData)
         return searchRes.hits.hits
     }
 
@@ -33,7 +33,7 @@ export abstract class GarbageElasticService {
         if (kmDistance) {
             queryData.geo_distance.distance = `${kmDistance}km`
         }
-        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_MAPPING_TYPE, queryData)
+        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, queryData)
         return searchRes.hits.hits
     }
 
@@ -43,12 +43,12 @@ export abstract class GarbageElasticService {
                 emptyDate
             }
         }
-        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_MAPPING_TYPE, queryData)
+        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, queryData)
         return searchRes.hits.hits
     }
 
     static async deleteById(id: string) {
-        return await this.delete(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_MAPPING_TYPE, id)
+        return await this.delete(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, id)
     }
 
     static async create(index: string, type: string, body: any) {
@@ -95,7 +95,7 @@ export abstract class GarbageElasticService {
     //     if (!id) throw 'missing id'
     //     return await elasticService.client.get({
     //         index: process.env.ELASTIC_INDEX_KEY,
-    //         type: process.env.ELASTIC_MAPPING_TYPE,
+    //         type: process.env.ELASTIC_DOC_TYPE,
     //         id,
     //     })
     // }

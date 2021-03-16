@@ -26,6 +26,7 @@ export class RedisService {
             redisKeys.forEach(async key => {
                 await this.client.del(key)
             });
+            logger.verbose(`delete redis indexes`)
         } catch (error) {
             console.error(error)
         }

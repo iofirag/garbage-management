@@ -28,12 +28,6 @@ export class ElasticService {
             await this.client.indices.create({
                 index: process.env.ELASTIC_INDEX_KEY
             })
-            await this.client.indices.putMapping({
-                index: process.env.ELASTIC_INDEX_KEY,
-                type: process.env.ELASTIC_MAPPING_TYPE,
-                body: GarbageElasticMappingType,
-                includeTypeName: true,
-            })
             logger.verbose(`create ref index`)
         } catch(error) {
             logger.error(`index: ${process.env.ELASTIC_INDEX_KEY} already exist`)
@@ -44,18 +38,19 @@ export class ElasticService {
             await this.client.indices.delete({
                 index: process.env.ELASTIC_INDEX_KEY
             })
+            logger.verbose(`delete elastic index`)
         } catch (error) {
             console.error(error)
         }
     }
 }
 
-export const GarbageElasticMappingType = {
-    properties: {
-        id: {type: "integer"},
-        color: {type: "text"},
-        type: {type: "text"},
-        location: {type: 'geo_point'},
-        emptyDate: {type: "date", format: "epoch_millis"}
-    }
-}
+// export const GarbageElasticMappingType = {
+//     properties: {
+//         id: {type: "integer"},
+//         color: {type: "text"},
+//         type: {type: "text"},
+//         location: {type: 'geo_point'},
+//         emptyDate: {type: "date", format: "epoch_millis"}
+//     }
+// }
