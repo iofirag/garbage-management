@@ -21,7 +21,7 @@ export module GarbageCtrl {
             await GarbageRedisService.removeRedisKeyByEmptyDateValue(emptyDate)
             
             // Fetch
-            const garbageData: IGarbage = {color, type, location: parsedLocation, emptyDate}
+            const garbageData: IGarbage = {color, type, location: parsedLocation, emptyDate, timestamp: Date.now()}
             const garbageDoc = await GarbageElasticService.insertGarbage(garbageData)
             return res.status(ResponseStatus.Ok).json(garbageDoc)
         } catch (error) {
@@ -63,19 +63,25 @@ export module GarbageCtrl {
         }
     }
 
-    export async function search(req: Request, res: Response): Promise<Response> {
+    export async function getById(req: Request, res: Response): Promise<Response> {
         try {
             // Data validation
             const {id} = req.params
-            let searchListRes: any
-            if (id && id !== 'undefined') {
-                // Fetch
-                searchListRes = await GarbageElasticService.searchById(<string>id)
-            } else {
-                // Fetch
-                searchListRes = await GarbageElasticService.searchAll()
+            if (!id) {
+                throw new Error('missing id')
             }
-            return res.status(ResponseStatus.Ok).json(searchListRes)
+            const docRes: any = await GarbageElasticService.getById(<string>id)
+            return res.status(ResponseStatus.Ok).json(docRes)
+        } catch (error) {
+            logger.error(error)
+            return res.status(ResponseStatus.BadRequest).json({error})
+        }
+    }
+
+    export async function getAll(req: Request, res: Response): Promise<Response> {
+        try {
+            const docListRes: any = await GarbageElasticService.getAll()
+            return res.status(ResponseStatus.Ok).json(docListRes)
         } catch (error) {
             logger.error(error)
             return res.status(ResponseStatus.BadRequest).json({error})
@@ -143,9 +149,9 @@ export module GarbageCtrl {
             // Create location,emptyDate key for redis from garbageId
             // create emptyDate key for redis
             // delete the one that exist
-            const doc = await GarbageElasticService.searchById(<string>id)
-            await GarbageRedisService.removeRedisKeyByLocation(doc._source.location)
-            await GarbageRedisService.removeRedisKeyByEmptyDateValue(doc._source.emptyDate)
+            const docRes = await GarbageElasticService.getById(<string>id)
+            await GarbageRedisService.removeRedisKeyByLocation(docRes._source.location)
+            await GarbageRedisService.removeRedisKeyByEmptyDateValue(docRes._source.emptyDate)
 
             // Fetch
             const deleteRes: any = await GarbageElasticService.deleteById(<string>id)
@@ -164,11 +170,11 @@ export module GarbageCtrl {
             const parsedLocation = parseLocation(location)
             
             // Fetch
-            const garbageData: IGarbage = {color, type, location: parsedLocation, emptyDate}
+            const garbageData: IGarbage = {color, type, location: parsedLocation, emptyDate, timestamp: Date.now()}
             const garbageDoc = await GarbageElasticService.insertGarbage(garbageData)
 
-            const searchListRes: any[] = await GarbageElasticService.searchById(<string>garbageDoc._id)
-            return res.status(ResponseStatus.Ok).json(searchListRes)
+            const docRes: any = await GarbageElasticService.getById(<string>garbageDoc._id)
+            return res.status(ResponseStatus.Ok).json(docRes)
         } catch (error) {
             logger.error(error)
             return res.status(ResponseStatus.BadRequest).json({error})

@@ -10,8 +10,10 @@ garbageRouter
 
     .get('/getByLocationRange', GarbageCtrl.getByLocationRange)
     .get('/getByEmptyDate', GarbageCtrl.getByEmptyDate)
+    .get('/getAll', GarbageCtrl.getAll)
     
     .put('/createAndFetchTest', GarbageCtrl.createAndFetchTest)
+    
     .put('/', GarbageCtrl.create)
-    .get('/:id', GarbageCtrl.search)
+    .get('/:id', GarbageCtrl.getById)
     .delete('/:id', GarbageCtrl._delete)

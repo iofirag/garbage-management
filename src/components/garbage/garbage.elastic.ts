@@ -12,15 +12,18 @@ export abstract class GarbageElasticService {
         return await this.update(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, id, updateData)
     }
 
-    static async searchById(id: string) {
-        const queryData = {match: {_id: id}}
-        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, queryData)
-        return searchRes.hits.hits
+    static async getById(id: string) {
+        const queryData: any = {match: {_id: id}}
+        return await this.getByCondition(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, queryData)
     }
 
-    static async searchAll() {
+    static async getAll() {
         const queryData: any = {match_all: {}}
-        const searchRes: any = await this.search(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, queryData)
+        return await this.getByCondition(process.env.ELASTIC_INDEX_KEY, process.env.ELASTIC_DOC_TYPE, queryData)
+    }
+
+    static async getByCondition(indexKey, docType, queryData) {
+        const searchRes: any = await this.search(indexKey, docType, queryData)
         return searchRes.hits.hits
     }
 

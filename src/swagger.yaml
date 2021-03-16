@@ -18,7 +18,7 @@ paths:
             $ref: '#/definitions/newGarbageData'
       responses:
         200:
-          description: create garbage completed
+          description: success create garbage
 
   /{id}:
     get:
@@ -26,9 +26,12 @@ paths:
         - in: path
           name: id
           type: string
+          required: true
       responses:
         200:
-          description: valid garbage completed
+          description: success get garbage by id
+        400:
+          description: missing id
     delete:
       parameters:
         - in: path
@@ -97,6 +100,12 @@ paths:
       responses:
         200:
           description: get by emptyDate completed
+  
+  /getAll:
+    get:
+      responses:
+        200:
+          description: get All
 
 definitions:
   newGarbageData:
