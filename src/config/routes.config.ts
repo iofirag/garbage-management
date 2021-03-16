@@ -9,7 +9,7 @@ const swaggerDocument = YAML.load(__dirname + '/../swagger.yaml')
 export const RoutesConfig = (app: Application) => {
     app
         .use('/garbage', garbageRouter)
-        .use('/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDocument))
+        .use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDocument))
 
         .get('/', (req: Request, res: Response) => res.send('<h1>node-ts server is running ;)</h1>'))
 }

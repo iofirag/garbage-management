@@ -16,7 +16,7 @@ paths:
           required: true
           schema: 
             $ref: '#/definitions/newGarbageData'
-      response:
+      responses:
         200:
           description: create garbage completed
 
@@ -26,7 +26,7 @@ paths:
         - in: path
           name: id
           type: string
-      response:
+      responses:
         200:
           description: valid garbage completed
     delete:
@@ -35,7 +35,7 @@ paths:
           name: id
           required: true
           type: string
-      response:
+      responses:
         200:
           description: delete garbage completed
 
@@ -50,7 +50,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/updateLocationData'
-      response:
+      responses:
         200:
           description: update garbage location success
 
@@ -65,7 +65,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/updateEmptyDateData'
-      response:
+      responses:
         200:
           description: create garbage emptyDate success
 
@@ -83,7 +83,7 @@ paths:
         - in: query
           name: kmDistance
           type: number
-      response:
+      responses:
         200:
           description: get by location completed
           
@@ -94,7 +94,7 @@ paths:
           name: emptyDate
           type: number
           required: true
-      response:
+      responses:
         200:
           description: get by emptyDate completed
 
