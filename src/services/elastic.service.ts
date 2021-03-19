@@ -51,10 +51,10 @@ export class ElasticService {
 export const GarbageElasticMappingType = {
     properties: {
         id: {type: "integer"},
-        timestamp: {type: "date", format: "epoch_millis"},
-        color: {type: "text"},
-        type: {type: "text"},
+        color: {type: "keyword"},
+        type: {type: "keyword"},
         location: {type: 'geo_point'},
         emptyDate: {type: "date", format: "epoch_millis"},
+        timestamp: {type: "date", format: "epoch_millis"},
     }
 }
