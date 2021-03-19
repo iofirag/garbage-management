@@ -26,7 +26,10 @@ export class ElasticService {
     private async init() {
         try {
             await this.client.indices.create({
-                index: process.env.ELASTIC_INDEX_KEY
+                index: process.env.ELASTIC_INDEX_KEY,
+                body: {
+                    mappings: GarbageElasticMappingType
+                }
             })
             logger.verbose(`create ref index`)
         } catch(error) {
@@ -45,12 +48,13 @@ export class ElasticService {
     }
 }
 
-// export const GarbageElasticMappingType = {
-//     properties: {
-//         id: {type: "integer"},
-//         color: {type: "text"},
-//         type: {type: "text"},
-//         location: {type: 'geo_point'},
-//         emptyDate: {type: "date", format: "epoch_millis"}
-//     }
-// }
+export const GarbageElasticMappingType = {
+    properties: {
+        id: {type: "integer"},
+        timestamp: {type: "date", format: "epoch_millis"},
+        color: {type: "text"},
+        type: {type: "text"},
+        location: {type: 'geo_point'},
+        emptyDate: {type: "date", format: "epoch_millis"},
+    }
+}
