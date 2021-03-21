@@ -21,7 +21,7 @@ export module GarbageCtrl {
             await GarbageRedisService.removeRedisKeyByEmptyDateValue(emptyDate)
             
             // Fetch
-            const garbageData: IGarbage = {color, type, location: parsedLocation, emptyDate, timestamp: Date.now()}
+            const garbageData: IGarbage = {color, type, location: parsedLocation, emptyDate, /*timestamp: Date.now()*/}
             const garbageDoc = await GarbageElasticService.insertGarbage(garbageData)
             return res.status(ResponseStatus.Ok).json(garbageDoc)
         } catch (error) {
@@ -170,7 +170,7 @@ export module GarbageCtrl {
             const parsedLocation = parseLocation(location)
             
             // Fetch
-            const garbageData: IGarbage = {color, type, location: parsedLocation, emptyDate, timestamp: Date.now()}
+            const garbageData: IGarbage = {color, type, location: parsedLocation, emptyDate, /*timestamp: Date.now()*/}
             const garbageDoc = await GarbageElasticService.insertGarbage(garbageData)
 
             const docRes: any = await GarbageElasticService.getById(<string>garbageDoc._id)

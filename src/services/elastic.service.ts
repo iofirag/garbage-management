@@ -4,6 +4,7 @@ import { logger } from "../server";
 
 export class ElasticService {
     public client: Client
+    private pipelineName: string = 'timestamp_pipeline'
 
     constructor() {
         this.connect()
@@ -16,8 +17,9 @@ export class ElasticService {
             this.client = new Client({
                 hosts: hostList,
                 log: 'trace',
+                maxRetries: 5,
+                requestTimeout: 60000,
             })
-            await this.client.ping({ requestTimeout: 3000 });
             logger.verbose('Elasticsearch client connected.')
         } catch(error) {
             logger.error('Error happend while connecting to elasticsearch', error.message)
@@ -25,36 +27,65 @@ export class ElasticService {
 	}
     private async init() {
         try {
+            // Create index & mapping types
             await this.client.indices.create({
                 index: process.env.ELASTIC_INDEX_KEY,
                 body: {
-                    mappings: GarbageElasticMappingType
+                    mappings: {
+                        properties: GarbageElasticMappingType,
+                    },
+                    settings: {
+                        final_pipeline: this.pipelineName
+                    }
                 }
             })
-            logger.verbose(`create ref index`)
+            logger.verbose(`success create ${process.env.ELASTIC_INDEX_KEY} index`)
         } catch(error) {
-            logger.error(`index: ${process.env.ELASTIC_INDEX_KEY} already exist`)
+            logger.verbose(`error: create index, ${error}`)
+            logger.error(`error: index ${process.env.ELASTIC_INDEX_KEY} already exist`)
+        }
+        try {
+            // Create pipeline
+            await this.client.ingest.putPipeline({
+                id: this.pipelineName,
+                body: {
+                    description: `Creates ${this.pipelineName} pipeline when a document is initially indexed`,
+                    processors: [{
+                        set: {
+                            field: '_source.timestamp',
+                            value: '{{_ingest.timestamp}}'
+                        }
+                    }]
+                }
+            })
+            logger.verbose(`success create pipeline`)
+        } catch(error) {
+            logger.error(`pipeline: ${this.pipelineName} already exist`)
         }
     }
     public async reset() {
         try {
-            await this.client.indices.delete({
-                index: process.env.ELASTIC_INDEX_KEY
-            })
+            // Delete pipeline
+            this.client.ingest.deletePipeline({ id: this.pipelineName })
+            logger.verbose(`delete elastic pipeline`)
+        } catch (error) {
+            logger.error(error)
+        }
+        try {
+            // Delete index
+            this.client.indices.delete({ index: process.env.ELASTIC_INDEX_KEY })
             logger.verbose(`delete elastic index`)
         } catch (error) {
-            console.error(error)
+            logger.error(error)
         }
     }
 }
 
 export const GarbageElasticMappingType = {
-    properties: {
-        id: {type: "integer"},
-        color: {type: "keyword"},
-        type: {type: "keyword"},
-        location: {type: 'geo_point'},
-        emptyDate: {type: "date", format: "epoch_millis"},
-        timestamp: {type: "date", format: "epoch_millis"},
-    }
+    id: {type: "integer"},
+    color: {type: "keyword"},
+    type: {type: "keyword"},
+    location: {type: 'geo_point'},
+    emptyDate: {type: "date", format: "epoch_millis"},
+    timestamp: {type: "date", /*format: "epoch_millis"*/},
 }
