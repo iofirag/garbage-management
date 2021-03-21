@@ -50,6 +50,7 @@ services:
       - GF_SMTP_USER=myadrress@gmail.com
       - GF_SMTP_PASSWORD=mypassword
       - GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
+      - GF_INSTALL_PLUGINS=simpod-json-datasource,grafana-clock-panel,grafana-worldmap-panel,natel-plotly-panel
     ports:
       - 3000:3000
 
