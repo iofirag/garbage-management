@@ -4,7 +4,6 @@ import { logger } from "../server";
 
 export class ElasticService {
     public client: Client
-    private pipelineName: string = 'timestamp_pipeline'
 
     constructor() {
         this.connect()
@@ -35,7 +34,7 @@ export class ElasticService {
                         properties: GarbageElasticMappingType,
                     },
                     settings: {
-                        final_pipeline: this.pipelineName
+                        final_pipeline: process.env.ELASTIC_INGEST_PIPELINE_KEY
                     }
                 }
             })
@@ -47,9 +46,9 @@ export class ElasticService {
         try {
             // Create pipeline
             await this.client.ingest.putPipeline({
-                id: this.pipelineName,
+                id: process.env.ELASTIC_INGEST_PIPELINE_KEY,
                 body: {
-                    description: `Creates ${this.pipelineName} pipeline when a document is initially indexed`,
+                    description: `Creates ${process.env.ELASTIC_INGEST_PIPELINE_KEY} pipeline when a document is initially indexed`,
                     processors: [{
                         set: {
                             field: '_source.timestamp',
@@ -60,13 +59,13 @@ export class ElasticService {
             })
             logger.verbose(`success create pipeline`)
         } catch(error) {
-            logger.error(`pipeline: ${this.pipelineName} already exist`)
+            logger.error(`pipeline: ${process.env.ELASTIC_INGEST_PIPELINE_KEY} already exist`)
         }
     }
     public async reset() {
         try {
             // Delete pipeline
-            this.client.ingest.deletePipeline({ id: this.pipelineName })
+            this.client.ingest.deletePipeline({ id: process.env.ELASTIC_INGEST_PIPELINE_KEY })
             logger.verbose(`delete elastic pipeline`)
         } catch (error) {
             logger.error(error)
