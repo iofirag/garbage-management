@@ -1,0 +1,35 @@
+{
+    "name": "JSON",
+    "id": "simpod-json-datasource",
+    "type": "datasource",
+    "annotations": true,
+    "metrics": true,
+    "logs": true,
+    "info": {
+        "author": {
+            "name": "Šimon Podlipský"
+        },
+        "description": "JSON over HTTP datasource",
+        "keywords": ["json", "api"],
+        "logos": {
+            "small": "img/json-logo.svg",
+            "large": "img/json-logo.svg"
+        },
+        "links": [
+            {
+                "name": "GitHub",
+                "url": "https://github.com/simPod/grafana-json-datasource"
+            },
+            {
+                "name": "MIT License",
+                "url": "https://github.com/simPod/grafana-json-datasource/blob/master/LICENSE"
+            }
+        ],
+        "version": "0.2.3",
+        "updated": "2021-01-27"
+    },
+    "dependencies": {
+        "grafanaDependency": ">=7.3.0",
+        "plugins": [ ]
+    }
+}

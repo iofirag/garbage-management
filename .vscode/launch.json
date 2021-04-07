@@ -10,7 +10,7 @@
             "name": "Launch Nodemon with inspector",
             "protocol": "inspector",
             "runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
-            "program": "${workspaceFolder}/src/server.ts",
+            "program": "${workspaceFolder}/index.ts",
             "restart": true,
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"

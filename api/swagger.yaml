@@ -1,0 +1,172 @@
+swagger: "2.0"
+info:
+  title: Garbage Managing API
+  description: Swagger test api
+  version: "1.0.0"
+host: "localhost:3088"
+basePath: "/api/v1"
+paths:
+
+  /:
+    put:
+      x-swagger-router-controller: "testController"
+      operationId: "getAllCategories"
+      description: "Get all classes"
+      parameters:
+        - in: body
+          name: "newGarbageData"
+          description: "The request parameters for creating garbage"
+          required: true
+          schema: 
+            $ref: '#/definitions/newGarbageData'
+      responses:
+        200:
+          description: success create garbage
+
+  /{id}:
+    get:
+      x-swagger-router-controller: "testController"
+      operationId: "getAllCategories"
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        200:
+          description: success get garbage by id
+        400:
+          description: missing id
+    delete:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        200:
+          description: delete garbage completed
+
+  # /updateByLocation/{id}:
+  #   post:
+  #     parameters:
+  #       - in: path
+  #         name: id
+  #         type: string
+  #       - in: body
+  #         name: updateLocationData
+  #         required: true
+  #         schema:
+  #           $ref: '#/definitions/updateLocationData'
+  #     responses:
+  #       200:
+  #         description: update garbage location success
+
+  # /updateByEmptyDate/{id}:
+  #   post:
+  #     parameters:
+  #       - in: path
+  #         name: id
+  #         type: string
+  #       - in: body
+  #         name: updateEmptyDateData
+  #         required: true
+  #         schema:
+  #           $ref: '#/definitions/updateEmptyDateData'
+  #     responses:
+  #       200:
+  #         description: create garbage emptyDate success
+
+  /getByLocationRange:
+    get:
+      x-swagger-router-controller: "testController"
+      operationId: "getAllCategories"
+      parameters:
+        - in: query
+          name: lat
+          type: number
+          required: true
+        - in: query
+          name: lon
+          type: number
+          required: true
+        - in: query
+          name: kmDistance
+          type: number
+      responses:
+        200:
+          description: get by location completed
+          
+  /getByEmptyDate:
+    get:
+      x-swagger-router-controller: "testController"
+      operationId: "getAllCategories"
+      parameters:
+        - in: query
+          name: emptyDate
+          type: number
+          required: true
+      responses:
+        200:
+          description: get by emptyDate completed
+  
+  /getAll:
+    get:
+      x-swagger-router-controller: "testController"
+      operationId: "getAllCategories"
+      responses:
+        200:
+          description: get All
+
+definitions:
+  newGarbageData:
+    type: object
+    required: 
+      - color
+      - type
+      - location
+      - emptyDate
+    properties:
+      color: 
+        type: string
+      type:
+        type: number
+      location:
+        $ref: '#/definitions/locationData'
+      emptyDate:
+        type: number
+
+  updateLocationData:
+    type: object
+    required:
+        - field
+        - value
+    properties:
+      field:
+        type: string
+        default: location
+      value:
+        $ref: '#/definitions/locationData'
+    
+  updateEmptyDateData:
+    type: object
+    required:
+        - field
+        - value
+    properties:
+      field:
+        type: string
+        default: emptyDate
+      value:
+        type: number
+
+  locationData:
+    type: object
+    required: 
+      - lat
+      - lon
+    properties:
+      lat: 
+        type: number
+      lon:
+        type: number

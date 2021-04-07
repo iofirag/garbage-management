@@ -15,9 +15,9 @@
         }
     },
     "exclude": [
-        "src/test/*", "**/*/.spec.ts"
+        "test/*", "**/*/.spec.ts"
     ],
     "include": [
-        "src/**/*", "src/test"
-    ]
+        "src/**/*", "test"
+, "utils", "index.ts", "components", "config", "middlewares", "routes", "services"    ]
 }
