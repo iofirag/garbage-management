@@ -104,7 +104,7 @@ function applyApi(): void {
         // Serve the Swagger documents and Swagger UI
         app.use(middleware.swaggerUi({
             apiDocs: `${parsedURL.path}${serviceName}/api-docs`,
-            swaggerUi: `/${serviceName}/docs`,
+            swaggerUi: `/docs`,
         }));
 
         // Start the server

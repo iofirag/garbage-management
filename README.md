@@ -1,8 +1,9 @@
 todo:
 
-- monitor service in grafana (by using http/json extension)
 - eslint
+- monitor service with grafana (by using http/json extension)
 - dockerfile
 - dependency injection (DI)
-- configuration (confd / etcd)
+- configuration (etcd & confd & .toml & .tmpl)
+- toml linter
 - logstash

@@ -1,6 +1,35 @@
 version: "3.9"  # optional since v1.27.0
 
+volumes:
+  elasticsearch-data:
+    driver: local
+
+# networks:
+#   app-tier:
+#     driver: bridge
+
+    
 services:
+
+  etcdviewer:
+    image: nikfoundas/etcd-viewer
+    container_name: etcdviewer
+    ports:
+      - 8080:8080
+
+  etcd:
+    image: 'bitnami/etcd:latest'
+    container_name: etcd
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_ENABLE_V2=true
+    volumes:
+      - ./.volume/etcd:/bitnami/etcd
+    ports:
+      - 2379:2379
+      - 2380:2380
+
   # Elasticsearch Docker Images: https://www.docker.elastic.co/
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.11.2
@@ -80,11 +109,23 @@ services:
   #     timeout: 50s
   #     retries: 5
 
-    
-volumes:
-  elasticsearch-data:
-    driver: local
-
+  # etcd:
+  #   image: "quay.io/coreos/etcd:v3.4.1"
+  #   command: [
+  #     "etcd",
+  #     "--name=etcd0",
+  #     "--advertise-client-urls=http://${DOCKER_HOST_IP}:2379,http://${DOCKER_HOST_IP}:4001",
+  #     "--listen-client-urls=http://0.0.0.0:2379,http://0.0.0.0:4001",
+  #     "--initial-advertise-peer-urls=http://${DOCKER_HOST_IP}:2380",
+  #     "--listen-peer-urls=http://0.0.0.0:2380",
+  #     "--initial-cluster-token=etcd-cluster-1",
+  #     "--initial-cluster=etcd0=http://${DOCKER_HOST_IP}:2380",
+  #     "--initial-cluster-state=new"
+  #   ]
+  #   ports:
+  #   - "2379:2379"
+  #   - 2380
+  #   - 4001
 # networks:
 #   elastic:
 #     driver: bridge
