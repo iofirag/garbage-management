@@ -15,6 +15,8 @@ import url from 'url'
 import swaggerTools from 'swagger-tools'
 import morgan from "morgan";
 import os from "os"
+// const { Etcd3 } = require('etcd3');
+var Etcd = require('node-etcd');
 dotenv.config();
 
 
@@ -54,7 +56,11 @@ function loadMiddlewares(): void {
 }
 
 function applyServices(): void {
-    // connect to db
+    var etcd = new Etcd();
+    etcd.get("configuration/test_json", (err, res) => {
+        console.log('data=')
+        console.log(res.node.value)
+    });
     elasticService = new ElasticService()
     redisService = new RedisService()
 }
@@ -62,7 +68,7 @@ function applyServices(): void {
 function applyApi(): void {
     // swaggerRouter configuration
     const options = {
-        controllers: './controllers',
+        controllers: './routes',
         useStubs: process.env.NODE_ENV === 'development' // Conditionally turn on stubs (mock mode)
     };
     
@@ -110,7 +116,7 @@ function applyApi(): void {
         // Start the server
         server.listen(port, () => {
             logger.log('info', `Your server is listening on http://${swaggerDoc.host}`);
-            logger.log('info', `Swagger-ui is available on http://${swaggerDoc.host}/${serviceName}/docs`);
+            logger.log('info', `Swagger-ui is available on http://${swaggerDoc.host}/docs`);
             logger.log('info', `Swagger-yaml is available on http://${swaggerDoc.host}/${serviceName}/api-docs`);
         })
     });

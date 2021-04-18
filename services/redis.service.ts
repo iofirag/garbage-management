@@ -31,4 +31,24 @@ export class RedisService {
             console.error(error)
         }
     }
+
+    async getCacheKey(key: string) {
+        return await this.client.get(key)
+    }
+
+    async getCacheKeyListByPrefix(key: string) {
+        return await this.client.keys(key+'*')
+    }
+
+    async setCacheValue(key: string, value: any, seconds?: number) {
+        if (seconds) {
+            return await this.client.setex(key, seconds, JSON.stringify(value))
+        } else {
+            return await this.client.set(key, JSON.stringify(value))
+        }
+    }
+    
+    async deleteCacheKey(key: string) {
+        return await this.client.del(key)
+    }
 }

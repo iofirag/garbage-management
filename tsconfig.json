@@ -19,5 +19,5 @@
     ],
     "include": [
         "src/**/*", "test"
-, "utils", "index.ts", "components", "config", "middlewares", "routes", "services"    ]
+, "utils", "index.ts", "components", "config", "middlewares", "routes", "services", "routes/garbage.routes.ts"    ]
 }

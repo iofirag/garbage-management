@@ -7,11 +7,22 @@ host: "localhost:3088"
 basePath: "/api/v1"
 paths:
 
-  /:
+  /healthCheck:
+    get:
+      x-swagger-router-controller: "health.controller"
+      operationId: "healthCheck"
+      description: "Health check"
+      responses:
+        200:
+          description: health good
+        400:
+          description: health bad
+
+  /addGarbage:
     put:
-      x-swagger-router-controller: "testController"
-      operationId: "getAllCategories"
-      description: "Get all classes"
+      x-swagger-router-controller: "garbage.controller"
+      operationId: "create"
+      description: "Create new garbage"
       parameters:
         - in: body
           name: "newGarbageData"
@@ -23,10 +34,11 @@ paths:
         200:
           description: success create garbage
 
-  /{id}:
+  /getById/{id}:
     get:
-      x-swagger-router-controller: "testController"
-      operationId: "getAllCategories"
+      x-swagger-router-controller: "garbage.controller"
+      operationId: "getById"
+      description: "Get garbage by id"
       parameters:
         - in: path
           name: id
@@ -37,7 +49,12 @@ paths:
           description: success get garbage by id
         400:
           description: missing id
+
+  /deleteById/{id}:
     delete:
+      x-swagger-router-controller: "garbage.controller"
+      operationId: "_delete"
+      description: "Delete garbage by id"
       parameters:
         - in: path
           name: id
@@ -47,40 +64,49 @@ paths:
         200:
           description: delete garbage completed
 
-  # /updateByLocation/{id}:
-  #   post:
-  #     parameters:
-  #       - in: path
-  #         name: id
-  #         type: string
-  #       - in: body
-  #         name: updateLocationData
-  #         required: true
-  #         schema:
-  #           $ref: '#/definitions/updateLocationData'
-  #     responses:
-  #       200:
-  #         description: update garbage location success
+  /updateByLocation/{id}:
+    post:
+      x-swagger-router-controller: "garbage.controller"
+      operationId: "updateFieldById"
+      description: "Update location by garbage id"
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+        - in: body
+          name: updateLocationData
+          required: true
+          schema:
+            $ref: '#/definitions/updateLocationData'
+      responses:
+        200:
+          description: update garbage location success
 
-  # /updateByEmptyDate/{id}:
-  #   post:
-  #     parameters:
-  #       - in: path
-  #         name: id
-  #         type: string
-  #       - in: body
-  #         name: updateEmptyDateData
-  #         required: true
-  #         schema:
-  #           $ref: '#/definitions/updateEmptyDateData'
-  #     responses:
-  #       200:
-  #         description: create garbage emptyDate success
+  /updateByEmptyDate/{id}:
+    post:
+      x-swagger-router-controller: "garbage.controller"
+      operationId: "updateFieldById"
+      description: "Update empty-date by garbage id"
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+        - in: body
+          name: updateEmptyDateData
+          required: true
+          schema:
+            $ref: '#/definitions/updateEmptyDateData'
+      responses:
+        200:
+          description: create garbage emptyDate success
 
   /getByLocationRange:
     get:
-      x-swagger-router-controller: "testController"
-      operationId: "getAllCategories"
+      x-swagger-router-controller: "garbage.controller"
+      operationId: "getByLocationRange"
+      description: "Get all by location range"
       parameters:
         - in: query
           name: lat
@@ -99,8 +125,9 @@ paths:
           
   /getByEmptyDate:
     get:
-      x-swagger-router-controller: "testController"
-      operationId: "getAllCategories"
+      x-swagger-router-controller: "garbage.controller"
+      operationId: "getByEmptyDate"
+      description: "Get all by empty date"
       parameters:
         - in: query
           name: emptyDate
@@ -112,8 +139,9 @@ paths:
   
   /getAll:
     get:
-      x-swagger-router-controller: "testController"
-      operationId: "getAllCategories"
+      x-swagger-router-controller: "garbage.controller"
+      operationId: "getAll"
+      description: "Get all garbages"
       responses:
         200:
           description: get All
@@ -139,8 +167,8 @@ definitions:
   updateLocationData:
     type: object
     required:
-        - field
-        - value
+      - field
+      - value
     properties:
       field:
         type: string
@@ -151,8 +179,8 @@ definitions:
   updateEmptyDateData:
     type: object
     required:
-        - field
-        - value
+      - field
+      - value
     properties:
       field:
         type: string
